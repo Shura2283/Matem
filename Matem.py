@@ -9,10 +9,10 @@ st.set_page_config(
     layout="centered"
 )
 
-# Ochiq yashil, sariq va oq uyg'unligidagi to'liq CSS dizayn
+# Ochiq yashil va sariq fon, sariq maydonlar hamda ochiq ko'k tugmalar dizayni
 st.markdown("""
     <style>
-        /* Asosiy fon */
+        /* Asosiy fon: Ochiq yashil, ochiq sariq va oq ranglar aralashmasi */
         .stApp {
             background: linear-gradient(135deg, #f0fdf4 0%, #fefce8 50%, #f7fee7 100%);
             color: #1e293b;
@@ -49,13 +49,13 @@ st.markdown("""
             border: 1px solid #fde047;
         }
 
-        /* Barcha kiritish maydonlari: text_input, selectbox va number_input */
+        /* Kiritish maydonlari: ochiq sariq fon */
         div[data-baseweb="input"], 
         div[data-baseweb="select"], 
         .stTextInput input, 
         .stNumberInput input,
         .stSelectbox [role="combobox"] {
-            background-color: #fef08a !important; /* Ochiq sariq */
+            background-color: #fef08a !important;
             background: #fef08a !important;
             color: #1e293b !important;
             border: 2px solid #eab308 !important;
@@ -64,7 +64,6 @@ st.markdown("""
             font-size: 18px !important;
         }
 
-        /* Raqam kiritish maydonining ichki qismlari va chetlari */
         .stNumberInput div[data-baseweb="input"] {
             background-color: #fef08a !important;
             border: 2px solid #eab308 !important;
@@ -81,7 +80,7 @@ st.markdown("""
             color: #000000 !important;
         }
 
-        /* Ichki placeholder matni ("Bu yerga yozing...") */
+        /* Placeholder ("Bu yerga yozing...") */
         input::placeholder {
             color: #854d0e !important;
             opacity: 0.75;
@@ -109,19 +108,25 @@ st.markdown("""
             letter-spacing: 2px;
         }
 
-        /* Yashil tugmalar ("Keyingi misol", "Mashqni boshlash") */
-        div.stButton > button:first-child {
-            background-color: #16a34a !important;
-            color: #ffffff !important;
-            font-weight: 600 !important;
+        /* Tugmalar: Ochiq ko'k rang (Sky Blue / Cyan) */
+        div.stButton > button, 
+        div.stButton > button:first-child,
+        button[kind="primary"],
+        button[kind="secondary"] {
+            background-color: #60a5fa !important; /* Ochiq ko'k */
+            color: #0f172a !important; /* Aniq o'qiladigan to'q matn */
+            font-weight: 700 !important;
             font-size: 16px !important;
-            border-radius: 8px !important;
-            border: 2px solid #15803d !important;
+            border-radius: 12px !important;
+            border: 1px solid #3b82f6 !important;
             padding: 10px 26px !important;
             transition: all 0.2s ease !important;
+            box-shadow: 0 2px 6px rgba(59, 130, 246, 0.2) !important;
         }
+        div.stButton > button:hover, 
         div.stButton > button:first-child:hover {
-            background-color: #15803d !important;
+            background-color: #3b82f6 !important;
+            color: #ffffff !important;
             transform: scale(1.02);
         }
 
@@ -188,7 +193,7 @@ def generate_questions(op_choice):
             })
     return q_list
 
-# Session State sozlamalari
+# Session State
 if "started" not in st.session_state:
     st.session_state.started = False
 if "current_index" not in st.session_state:
@@ -200,7 +205,7 @@ if "answers" not in st.session_state:
 if "finished" not in st.session_state:
     st.session_state.finished = False
 
-# 1-BOSQICH: Kirish
+# 1-BOSQICH: Kirish oynasi
 if not st.session_state.started and not st.session_state.finished:
     with st.container():
         st.write("### O'quvchi ma'lumotlari")
@@ -222,7 +227,7 @@ if not st.session_state.started and not st.session_state.finished:
             else:
                 st.warning("Iltimos, avval ism va familiyangizni kiriting!")
 
-# 2-BOSQICH: Misollarni yechish
+# 2-BOSQICH: 15 ta misol yechish jarayoni
 elif st.session_state.started and not st.session_state.finished:
     idx = st.session_state.current_index
     total = len(st.session_state.questions)
@@ -271,7 +276,7 @@ elif st.session_state.started and not st.session_state.finished:
             else:
                 st.warning("Iltimos, javobingizni raqamda kiriting!")
 
-# 3-BOSQICH: 15 ta misol tugagandan so'ng natijalar jadvali
+# 3-BOSQICH: Natijalar va batafsil jadval
 elif st.session_state.finished:
     st.balloons()
     st.success("Tabriklaymiz! Mashq muvaffaqiyatli yakunlandi.")
