@@ -9,12 +9,12 @@ st.set_page_config(
     layout="centered"
 )
 
-# Oq, yashil va sariq ranglar uyg'unligidagi CSS dizayn
+# Ochiq yashil, ochiq sariq va oq ranglar uyg'unligidagi CSS dizayn
 st.markdown("""
     <style>
-        /* Asosiy fon */
+        /* Asosiy fon: Faqat ochiq yashil, ochiq sariq va oq ranglar aralashmasi (gradient) */
         .stApp {
-            background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 50%, #fefce8 100%);
+            background: linear-gradient(135deg, #f0fdf4 0%, #fefce8 50%, #f7fee7 100%);
             color: #1e293b;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
@@ -22,13 +22,13 @@ st.markdown("""
         /* Yuqori sarlavha paneli */
         .header-card {
             background-color: #ffffff;
-            border-left: 6px solid #15803d;
+            border-left: 6px solid #16a34a;
             border-top: 1px solid #dcfce7;
             border-right: 1px solid #dcfce7;
             border-bottom: 1px solid #dcfce7;
             padding: 20px;
             border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(21, 128, 61, 0.08);
+            box-shadow: 0 4px 12px rgba(22, 163, 74, 0.08);
             margin-bottom: 25px;
             text-align: center;
         }
@@ -49,6 +49,38 @@ st.markdown("""
             border: 1px solid #fde047;
         }
 
+        /* Kiritish maydonlari va Tanlash (Selectbox) uchun maxsus sariq rang dizayni */
+        /* input, selectbox va uning ichki qismlarini sariq qilish */
+        div[data-baseweb="input"], div[data-baseweb="select"], .stTextInput input, .stSelectbox [role="combobox"] {
+            background-color: #fcd34d !important; /* To'qroq sariq */
+            background: #fcd34d !important;
+            color: #1e293b !important;
+            border: 2px solid #ca8a04 !important;
+            border-radius: 12px !important;
+            font-weight: 600 !important;
+            font-size: 16px !important;
+        }
+
+        /* Fokus berilgandagi (bosilgandagi) holat */
+        div[data-baseweb="input"]:focus-within, div[data-baseweb="select"]:focus-within {
+            border-color: #854d0e !important;
+            box-shadow: 0 0 0 1px #854d0e !important;
+        }
+
+        /* Kiritish maydonidagi "Masalan: Azizbek Karimov" matni uchun (placeholder) */
+        input::placeholder {
+            color: #78350f !important;
+            opacity: 0.8;
+        }
+
+        /* Elementlar orasidagi yozuvlar (labellar) */
+        label {
+            color: #166534 !important; /* To'q yashil */
+            font-weight: 700 !important;
+            font-size: 16px !important;
+            margin-bottom: 6px !important;
+        }
+
         /* Misol ko'rsatiladigan panel */
         .math-box {
             background-color: #fef9c3;
@@ -63,42 +95,50 @@ st.markdown("""
             letter-spacing: 2px;
         }
 
-        /* Tugmalar dizayni */
+        /* "Javob berish", "Mashqni boshlash" va boshqa tugmalar */
         div.stButton > button:first-child {
-            background-color: #15803d !important;
+            background-color: #16a34a !important; /* Yashil */
             color: #ffffff !important;
             font-weight: 600 !important;
             border-radius: 8px !important;
-            border: none !important;
+            border: 2px solid #15803d !important;
             padding: 10px 24px !important;
             transition: all 0.2s ease !important;
         }
         div.stButton > button:first-child:hover {
-            background-color: #166534 !important;
+            background-color: #15803d !important;
             transform: scale(1.02);
         }
 
         /* Jadvallar chegarasini aniq qilib ko'rsatish */
         table {
-            border: 2px solid #334155 !important;
+            border: 2px solid #15803d !important;
             width: 100% !important;
+            border-radius: 8px;
+            overflow: hidden;
         }
         th {
-            background-color: #f1f5f9 !important;
-            color: #0f172a !important;
-            border: 1.5px solid #334155 !important;
+            background-color: #dcfce7 !important; /* Ochiq yashil sarlavha */
+            color: #14532d !important;
+            border: 1.5px solid #15803d !important;
             text-align: center !important;
-            padding: 10px !important;
+            padding: 12px !important;
+            font-weight: bold !important;
         }
         td {
-            border: 1.5px solid #64748b !important;
+            background-color: #ffffff !important;
+            border: 1.5px solid #16a34a !important;
             text-align: center !important;
             padding: 10px !important;
+            color: #1e293b !important;
+        }
+        tr:nth-child(even) td {
+            background-color: #f0fdf4 !important; /* Qatorlarni ajratuvchi ochiq yashil */
         }
     </style>
 """, unsafe_allow_html=True)
 
-# Sarlavha qismi
+# Sarlavha qismi (Tuzuvchi ismi bilan)
 st.markdown("""
     <div class="header-card">
         <div class="header-title">Matematika: Ko'paytirish va Bo'lish Trenajori</div>
@@ -106,6 +146,7 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
+# Savollar bazasini shakllantirish funksiyasi
 def generate_questions(op_choice):
     q_list = []
     for _ in range(15):
@@ -145,16 +186,17 @@ if "answers" not in st.session_state:
 if "finished" not in st.session_state:
     st.session_state.finished = False
 
-# 1-BOSQICH: O'quvchi ma'lumotlarini kiritish
+# 1-BOSQICH: O'quvchi ma'lumotlarini kiritish va sozlash
 if not st.session_state.started and not st.session_state.finished:
     with st.container():
-        st.subheader("O'quvchi ma'lumotlari")
+        st.write("### Kirish")
         student_name = st.text_input("O'quvchining ismi va familiyasi:", placeholder="Masalan: Azizbek Karimov")
         op_type = st.selectbox(
             "Amal turini tanlang:",
             ["Aralash (× va ÷)", "Ko'paytirish (×)", "Bo'lish (÷)"]
         )
 
+        st.write("")
         if st.button("Mashqni boshlash"):
             if student_name.strip():
                 st.session_state.student_name = student_name.strip()
@@ -164,15 +206,15 @@ if not st.session_state.started and not st.session_state.finished:
                 st.session_state.started = True
                 st.rerun()
             else:
-                st.warning("Iltimos, ism va familiyangizni kiriting!")
+                st.warning("Iltimos, avval ism va familiyangizni kiriting!")
 
-# 2-BOSQICH: 15 ta misolni navbatma-navbat ishlash
+# 2-BOSQICH: Ketma-ket 15 ta misolni yechish jarayoni
 elif st.session_state.started and not st.session_state.finished:
     idx = st.session_state.current_index
     total = len(st.session_state.questions)
     curr_q = st.session_state.questions[idx]
 
-    # Holat satri
+    # Holat satri va ma'lumotlar
     col1, col2 = st.columns([2, 1])
     with col1:
         st.write(f"👤 **O'quvchi:** {st.session_state.student_name}")
@@ -181,7 +223,7 @@ elif st.session_state.started and not st.session_state.finished:
 
     st.progress((idx) / total)
 
-    # Misol oynasi
+    # Misol ko'rsatiladigan hudud
     st.markdown(f"""
         <div class="math-box">
             {curr_q['problem']} = ?
@@ -193,10 +235,10 @@ elif st.session_state.started and not st.session_state.finished:
             "Javobingizni kiriting:", 
             step=1, 
             value=None, 
-            placeholder="Son kiriting...", 
+            placeholder="Bu yerga yozing...", 
             format="%d"
         )
-        submit_btn = st.form_submit_button("Keyingisi ➔")
+        submit_btn = st.form_submit_button("Keyingi misol ➔")
 
         if submit_btn:
             if user_ans is not None:
@@ -215,18 +257,19 @@ elif st.session_state.started and not st.session_state.finished:
                     st.session_state.finished = True
                 st.rerun()
             else:
-                st.warning("Iltimos, avval javobni yozing!")
+                st.warning("Iltimos, javobingizni raqamda kiriting!")
 
-# 3-BOSQICH: 15 misoldan so'ng javoblar jadvali
+# 3-BOSQICH: Natijalar va batafsil aniq jadval (Faqat 15 ta savol tugagach chiqadi)
 elif st.session_state.finished:
-    st.success("Tabriklaymiz! Barcha 15 ta misol yechildi.")
+    st.balloons()
+    st.success("Tabriklaymiz! Mashq muvaffaqiyatli yakunlandi.")
     st.write(f"👤 **O'quvchi:** {st.session_state.student_name}")
 
     df = pd.DataFrame(st.session_state.answers)
     correct_count = sum(1 for a in st.session_state.answers if "To'g'ri" in a["Natija"])
     accuracy = round((correct_count / 15) * 100, 1)
 
-    # Xulosa kartalari
+    # Hisobot ko'rsatkichlari
     c1, c2, c3 = st.columns(3)
     c1.metric("Jami misollar", "15")
     c2.metric("To'g'ri javoblar", f"{correct_count} ta")
