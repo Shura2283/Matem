@@ -9,10 +9,10 @@ st.set_page_config(
     layout="centered"
 )
 
-# Ochiq yashil va sariq fon, sariq maydonlar hamda ochiq ko'k tugmalar dizayni
+# Yangilangan ranglar uyg'unligi (Ochiq ko'k kiritish maydoni, yashil + va - tugmalari)
 st.markdown("""
     <style>
-        /* Asosiy fon: Ochiq yashil, ochiq sariq va oq ranglar aralashmasi */
+        /* Asosiy fon */
         .stApp {
             background: linear-gradient(135deg, #f0fdf4 0%, #fefce8 50%, #f7fee7 100%);
             color: #1e293b;
@@ -49,44 +49,51 @@ st.markdown("""
             border: 1px solid #fde047;
         }
 
-        /* Kiritish maydonlari: ochiq sariq fon */
+        /* Kiritish maydonlari: Ochiq ko'k rang */
         div[data-baseweb="input"], 
         div[data-baseweb="select"], 
         .stTextInput input, 
         .stNumberInput input,
         .stSelectbox [role="combobox"] {
-            background-color: #fef08a !important;
-            background: #fef08a !important;
-            color: #1e293b !important;
-            border: 2px solid #eab308 !important;
+            background-color: #bae6fd !important; /* Ochiq ko'k */
+            background: #bae6fd !important;
+            color: #0369a1 !important;
+            border: 2px solid #38bdf8 !important;
             border-radius: 10px !important;
             font-weight: 600 !important;
             font-size: 18px !important;
         }
 
         .stNumberInput div[data-baseweb="input"] {
-            background-color: #fef08a !important;
-            border: 2px solid #eab308 !important;
+            background-color: #bae6fd !important;
+            border: 2px solid #38bdf8 !important;
+            border-radius: 10px !important;
+            overflow: hidden !important;
         }
 
-        /* Raqam kiritish maydonidagi + va - tugmalari */
-        .stNumberInput button {
-            background-color: #fef08a !important;
-            color: #713f12 !important;
+        /* Raqam kiritish maydonidagi qora tugmalar: Ochiq yashil rangga */
+        .stNumberInput button,
+        .stNumberInput [data-testid="stNumberInputStepDown"],
+        .stNumberInput [data-testid="stNumberInputStepUp"] {
+            background-color: #bbf7d0 !important; /* Ochiq yashil */
+            color: #166534 !important;
             border: none !important;
         }
-        .stNumberInput button:hover {
-            background-color: #fde047 !important;
-            color: #000000 !important;
+
+        .stNumberInput button:hover,
+        .stNumberInput [data-testid="stNumberInputStepDown"]:hover,
+        .stNumberInput [data-testid="stNumberInputStepUp"]:hover {
+            background-color: #86efac !important;
+            color: #14532d !important;
         }
 
-        /* Placeholder ("Bu yerga yozing...") */
+        /* Placeholder matni ("Bu yerga yozing...") */
         input::placeholder {
-            color: #854d0e !important;
-            opacity: 0.75;
+            color: #0284c7 !important;
+            opacity: 0.8;
         }
 
-        /* Maydon ustidagi yozuvlar */
+        /* Maydon ustidagi sarlavhalar */
         label, .stWidgetLabel p {
             color: #166534 !important;
             font-weight: 700 !important;
@@ -94,7 +101,7 @@ st.markdown("""
             margin-bottom: 6px !important;
         }
 
-        /* Misol ko'rsatiladigan panel */
+        /* Misol paneli */
         .math-box {
             background-color: #fef9c3;
             border: 2px dashed #ca8a04;
@@ -108,16 +115,16 @@ st.markdown("""
             letter-spacing: 2px;
         }
 
-        /* Tugmalar: Ochiq ko'k rang (Sky Blue / Cyan) */
+        /* Asosiy tugmalar (Keyingi misol, Mashqni boshlash) */
         div.stButton > button, 
         div.stButton > button:first-child,
         button[kind="primary"],
         button[kind="secondary"] {
             background-color: #60a5fa !important; /* Ochiq ko'k */
-            color: #0f172a !important; /* Aniq o'qiladigan to'q matn */
+            color: #0f172a !important;
             font-weight: 700 !important;
             font-size: 16px !important;
-            border-radius: 12px !important;
+            border-radius: 10px !important;
             border: 1px solid #3b82f6 !important;
             padding: 10px 26px !important;
             transition: all 0.2s ease !important;
@@ -130,7 +137,7 @@ st.markdown("""
             transform: scale(1.02);
         }
 
-        /* Chizilgan aniq jadval stili */
+        /* Aniq chizilgan jadval dizayni */
         table {
             border: 2px solid #15803d !important;
             width: 100% !important;
@@ -227,7 +234,7 @@ if not st.session_state.started and not st.session_state.finished:
             else:
                 st.warning("Iltimos, avval ism va familiyangizni kiriting!")
 
-# 2-BOSQICH: 15 ta misol yechish jarayoni
+# 2-BOSQICH: 15 ta misolni yechish
 elif st.session_state.started and not st.session_state.finished:
     idx = st.session_state.current_index
     total = len(st.session_state.questions)
@@ -276,7 +283,7 @@ elif st.session_state.started and not st.session_state.finished:
             else:
                 st.warning("Iltimos, javobingizni raqamda kiriting!")
 
-# 3-BOSQICH: Natijalar va batafsil jadval
+# 3-BOSQICH: Natijalar va tahlil jadvali
 elif st.session_state.finished:
     st.balloons()
     st.success("Tabriklaymiz! Mashq muvaffaqiyatli yakunlandi.")
