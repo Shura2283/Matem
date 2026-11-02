@@ -9,10 +9,10 @@ st.set_page_config(
     layout="centered"
 )
 
-# Ochiq yashil, ochiq sariq va oq ranglar uyg'unligidagi CSS dizayn
+# Ochiq yashil, sariq va oq uyg'unligidagi to'liq CSS dizayn
 st.markdown("""
     <style>
-        /* Asosiy fon: Faqat ochiq yashil, ochiq sariq va oq ranglar aralashmasi (gradient) */
+        /* Asosiy fon */
         .stApp {
             background: linear-gradient(135deg, #f0fdf4 0%, #fefce8 50%, #f7fee7 100%);
             color: #1e293b;
@@ -49,33 +49,47 @@ st.markdown("""
             border: 1px solid #fde047;
         }
 
-        /* Kiritish maydonlari va Tanlash (Selectbox) uchun maxsus sariq rang dizayni */
-        /* input, selectbox va uning ichki qismlarini sariq qilish */
-        div[data-baseweb="input"], div[data-baseweb="select"], .stTextInput input, .stSelectbox [role="combobox"] {
-            background-color: #fcd34d !important; /* To'qroq sariq */
-            background: #fcd34d !important;
+        /* Barcha kiritish maydonlari: text_input, selectbox va number_input */
+        div[data-baseweb="input"], 
+        div[data-baseweb="select"], 
+        .stTextInput input, 
+        .stNumberInput input,
+        .stSelectbox [role="combobox"] {
+            background-color: #fef08a !important; /* Ochiq sariq */
+            background: #fef08a !important;
             color: #1e293b !important;
-            border: 2px solid #ca8a04 !important;
-            border-radius: 12px !important;
+            border: 2px solid #eab308 !important;
+            border-radius: 10px !important;
             font-weight: 600 !important;
-            font-size: 16px !important;
+            font-size: 18px !important;
         }
 
-        /* Fokus berilgandagi (bosilgandagi) holat */
-        div[data-baseweb="input"]:focus-within, div[data-baseweb="select"]:focus-within {
-            border-color: #854d0e !important;
-            box-shadow: 0 0 0 1px #854d0e !important;
+        /* Raqam kiritish maydonining ichki qismlari va chetlari */
+        .stNumberInput div[data-baseweb="input"] {
+            background-color: #fef08a !important;
+            border: 2px solid #eab308 !important;
         }
 
-        /* Kiritish maydonidagi "Masalan: Azizbek Karimov" matni uchun (placeholder) */
+        /* Raqam kiritish maydonidagi + va - tugmalari */
+        .stNumberInput button {
+            background-color: #fef08a !important;
+            color: #713f12 !important;
+            border: none !important;
+        }
+        .stNumberInput button:hover {
+            background-color: #fde047 !important;
+            color: #000000 !important;
+        }
+
+        /* Ichki placeholder matni ("Bu yerga yozing...") */
         input::placeholder {
-            color: #78350f !important;
-            opacity: 0.8;
+            color: #854d0e !important;
+            opacity: 0.75;
         }
 
-        /* Elementlar orasidagi yozuvlar (labellar) */
-        label {
-            color: #166534 !important; /* To'q yashil */
+        /* Maydon ustidagi yozuvlar */
+        label, .stWidgetLabel p {
+            color: #166534 !important;
             font-weight: 700 !important;
             font-size: 16px !important;
             margin-bottom: 6px !important;
@@ -95,14 +109,15 @@ st.markdown("""
             letter-spacing: 2px;
         }
 
-        /* "Javob berish", "Mashqni boshlash" va boshqa tugmalar */
+        /* Yashil tugmalar ("Keyingi misol", "Mashqni boshlash") */
         div.stButton > button:first-child {
-            background-color: #16a34a !important; /* Yashil */
+            background-color: #16a34a !important;
             color: #ffffff !important;
             font-weight: 600 !important;
+            font-size: 16px !important;
             border-radius: 8px !important;
             border: 2px solid #15803d !important;
-            padding: 10px 24px !important;
+            padding: 10px 26px !important;
             transition: all 0.2s ease !important;
         }
         div.stButton > button:first-child:hover {
@@ -110,7 +125,7 @@ st.markdown("""
             transform: scale(1.02);
         }
 
-        /* Jadvallar chegarasini aniq qilib ko'rsatish */
+        /* Chizilgan aniq jadval stili */
         table {
             border: 2px solid #15803d !important;
             width: 100% !important;
@@ -118,7 +133,7 @@ st.markdown("""
             overflow: hidden;
         }
         th {
-            background-color: #dcfce7 !important; /* Ochiq yashil sarlavha */
+            background-color: #dcfce7 !important;
             color: #14532d !important;
             border: 1.5px solid #15803d !important;
             text-align: center !important;
@@ -133,12 +148,12 @@ st.markdown("""
             color: #1e293b !important;
         }
         tr:nth-child(even) td {
-            background-color: #f0fdf4 !important; /* Qatorlarni ajratuvchi ochiq yashil */
+            background-color: #f0fdf4 !important;
         }
     </style>
 """, unsafe_allow_html=True)
 
-# Sarlavha qismi (Tuzuvchi ismi bilan)
+# Sarlavha
 st.markdown("""
     <div class="header-card">
         <div class="header-title">Matematika: Ko'paytirish va Bo'lish Trenajori</div>
@@ -146,7 +161,6 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
-# Savollar bazasini shakllantirish funksiyasi
 def generate_questions(op_choice):
     q_list = []
     for _ in range(15):
@@ -174,7 +188,7 @@ def generate_questions(op_choice):
             })
     return q_list
 
-# Dastur holatini saqlash (Session State)
+# Session State sozlamalari
 if "started" not in st.session_state:
     st.session_state.started = False
 if "current_index" not in st.session_state:
@@ -186,10 +200,10 @@ if "answers" not in st.session_state:
 if "finished" not in st.session_state:
     st.session_state.finished = False
 
-# 1-BOSQICH: O'quvchi ma'lumotlarini kiritish va sozlash
+# 1-BOSQICH: Kirish
 if not st.session_state.started and not st.session_state.finished:
     with st.container():
-        st.write("### Kirish")
+        st.write("### O'quvchi ma'lumotlari")
         student_name = st.text_input("O'quvchining ismi va familiyasi:", placeholder="Masalan: Azizbek Karimov")
         op_type = st.selectbox(
             "Amal turini tanlang:",
@@ -208,13 +222,12 @@ if not st.session_state.started and not st.session_state.finished:
             else:
                 st.warning("Iltimos, avval ism va familiyangizni kiriting!")
 
-# 2-BOSQICH: Ketma-ket 15 ta misolni yechish jarayoni
+# 2-BOSQICH: Misollarni yechish
 elif st.session_state.started and not st.session_state.finished:
     idx = st.session_state.current_index
     total = len(st.session_state.questions)
     curr_q = st.session_state.questions[idx]
 
-    # Holat satri va ma'lumotlar
     col1, col2 = st.columns([2, 1])
     with col1:
         st.write(f"👤 **O'quvchi:** {st.session_state.student_name}")
@@ -223,7 +236,6 @@ elif st.session_state.started and not st.session_state.finished:
 
     st.progress((idx) / total)
 
-    # Misol ko'rsatiladigan hudud
     st.markdown(f"""
         <div class="math-box">
             {curr_q['problem']} = ?
@@ -259,7 +271,7 @@ elif st.session_state.started and not st.session_state.finished:
             else:
                 st.warning("Iltimos, javobingizni raqamda kiriting!")
 
-# 3-BOSQICH: Natijalar va batafsil aniq jadval (Faqat 15 ta savol tugagach chiqadi)
+# 3-BOSQICH: 15 ta misol tugagandan so'ng natijalar jadvali
 elif st.session_state.finished:
     st.balloons()
     st.success("Tabriklaymiz! Mashq muvaffaqiyatli yakunlandi.")
@@ -269,7 +281,6 @@ elif st.session_state.finished:
     correct_count = sum(1 for a in st.session_state.answers if "To'g'ri" in a["Natija"])
     accuracy = round((correct_count / 15) * 100, 1)
 
-    # Hisobot ko'rsatkichlari
     c1, c2, c3 = st.columns(3)
     c1.metric("Jami misollar", "15")
     c2.metric("To'g'ri javoblar", f"{correct_count} ta")
@@ -278,7 +289,6 @@ elif st.session_state.finished:
     st.write("---")
     st.subheader("📋 Batafsil natijalar jadvali")
 
-    # Aniq chizilgan HTML jadval
     html_table = df.to_html(index=False, classes="custom-table", justify="center")
     st.markdown(html_table, unsafe_allow_html=True)
 
